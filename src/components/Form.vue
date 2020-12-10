@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     props: ['createdUser'],
     data() {
@@ -28,16 +29,23 @@ export default {
         }
     },
     methods: {
-        submitForm() {
-            const data = {
+    async submitForm() {
+        const data = {
                 name: this.name,
                 email: this.email,
                 phone: this.phone
             }
 
-            this.$emit('userInfo', data)
-        }
+      const url = 'https://jsonplaceholder.typicode.com/users'
+
+      const response = await axios.post(url, data)
+
+      if(response.status === 201) {
+        this.newUser = response.data
+        this.$router.push({name: 'landingPage'})
+      }
     }
+  },
 
 }
 </script>
