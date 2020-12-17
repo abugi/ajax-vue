@@ -6,44 +6,46 @@
         <p>Name: {{person.name}}</p>
         <p>Email: {{person.email}}</p>
         <p>Phone: {{person.phone}}</p>
-        <div>Company: 
+        <div v-if="person.company">Company: 
           <p>Name: {{person.company.name}}</p>
           <p>Catch Phrase: {{person.company.catchPhrase}}</p>
           <p>Business Structure: {{person.company.bs}}</p>
         </div>
       </li>
     </ul>
+
+    <footer-element :numberOfUsers="persons ? persons.length : 'No users available'"></footer-element>
   </main>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'App',
   data() {
     return {
-      persons: null,
       newUser: null
     }
   },
-  async created() {
-    try {
-      const url = 'https://jsonplaceholder.typicode.com/users'
-
-      const result = await axios.get(url)
-
-      if(result.status === 200) {
-        this.persons = result.data
-      }
-    } catch (error) {
-      console.log(error)
+  computed: { 
+    updatedPersons() {
+      return this.$store.state.Persons
+    },
+    persons() {
+      return this.$store.state.Persons.persons
     }
-  }
+   },
+  async created() {
+    this.$store.dispatch('getPersons')
+  },
+  
 }
 </script>
 
 <style scoped>
+main {
+  padding: 5% 0;
+}
+
 ul {
   list-style-type: none;
 }

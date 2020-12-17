@@ -13,14 +13,14 @@
         </form>
         <button @click="submitForm">Submit</button>
 
-        <div>{{createdUser}}</div>
+        <footer-element></footer-element>
     </main>
 </template>
 
 <script>
+// import Footer from './Footer'
 import axios from 'axios'
 export default {
-    props: ['createdUser'],
     data() {
         return {
             name: null,
@@ -42,11 +42,14 @@ export default {
 
       if(response.status === 201) {
         this.newUser = response.data
+        this.$store.dispatch('updatePersons', response.data)
         this.$router.push({name: 'landingPage'})
       }
     }
   },
-
+//   components: {
+//       footerElement: Footer
+//   }
 }
 </script>
 
