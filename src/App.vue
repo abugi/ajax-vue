@@ -11,6 +11,11 @@
           Form
         </router-link>
       </span>
+      <span style="padding: 0 10px; font-size: 2em">
+        <router-link :to="{name: 'file'}">
+          File Upload
+        </router-link>
+      </span>
     </div>
     <router-view></router-view>
 </main>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import FormComponent from '@/components/Form'
 import PersonsComponent from '@/components/Persons'
+import FileUploads from '@/components/FileUploads'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,11 @@ const routes = [
         path: "/form",
         name: "form",
         component: FormComponent,
+    },
+    {
+        path: "/file",
+        name: "file",
+        component: FileUploads,
     }
 ]
 
