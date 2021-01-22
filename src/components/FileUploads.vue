@@ -1,34 +1,74 @@
 <template>
-  <form>
+  <!-- <form>
         <input
             type="file" 
             accept="image/png, image/jpeg, image/jpg, image/tiff"
+            multiple
             @change="handleFileUploads"
         >
-        <div v-if="!file" @click="attachFile" class="attach-file">Attach a file</div>
-        <div v-else class="image-preview">
-            <img v-if="file" />
 
-            <button>Upload</button>
+        <div v-if="!file" @click="attachFile" class="attach-file">Attach a file</div>
+
+        <div v-if="file" class="image-preview">
+            <img />
+
+            <button @click.prevent="uploadFile">Upload</button>
+            <span @click="closePreview">X</span>
         </div>
-  </form>
+  </form> -->
+
+  <main>
+    <div @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop" id="drop-area">
+        <form class="my-form">
+            <p>Darg and drop files here</p>
+            <p>or</p>
+            <input @change="handleFileUploads" type="file" id="fileElem" multiple accept="image/*">
+            <label class="button" for="fileElem">Select files</label>
+        </form>
+    </div>
+
+    <div v-if="file" class="image-preview">
+        <img />
+    </div>
+</main>
 </template>
 
 <script>
 export default {
-    name: 'FileUploads',
-    data() {
-        return {
-            file: null
-        }
+  name: 'App',
+  data() {
+    return {
+      file: null
+    }
+  },
+  methods: {
+    handleDragOver() {
+        const el = document.querySelector("#drop-area");
+        el.classList.add('highlight')
     },
-    methods: {
-        attachFile() {
-            const el = document.querySelector('input')
+    handleDragLeave() {
+        const el = document.querySelector("#drop-area");
+        el.classList.remove('highlight')
+    },
+    handleDrop(event) {
+        this.file = event.dataTransfer.files[0]
+        
+        var reader = new FileReader();
 
-            el.click()
-        },
-        handleFileUploads(event) {
+        reader.onload = function () {
+            const el = document.querySelector(".image-preview > img");
+            el.src = reader.result;
+        };
+       
+        this.handleDragLeave()
+        reader.readAsDataURL(this.file);
+    },
+    // attachFile() {
+    //   const el = document.querySelector('input')
+
+    //   el.click()
+    // },
+    handleFileUploads(event) {
             this.file = event.target.files[0];
 
             var reader = new FileReader();
@@ -38,14 +78,71 @@ export default {
                 el.src = reader.result;
             };
             reader.readAsDataURL(this.file);
-        }
+    },
+    closePreview() {
+      this.file = null
     }
-
+  }
 }
 </script>
 
+
 <style scoped>
 form{
+    width: 50%;
+    margin: 5vh auto;
+    text-align: center;
+}
+
+form > input {
+    visibility: hidden;
+}
+
+.image-preview {
+    width: 100%;
+}
+
+.image-preview > img{
+    width: 10%;
+    display: block;
+    margin: 0 auto;
+}
+
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 480px;
+  font-family: sans-serif;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+#drop-area.highlight {
+  border-color: purple;
+  background-color: beige;
+}
+p {
+  margin-top: 0;
+}
+.my-form {
+  margin-bottom: 10px;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.button:hover {
+  background: #ddd;
+}
+
+
+
+/* form{
     width: 50%;
     margin: 15vh auto;
 }
@@ -54,9 +151,22 @@ form > input {
     visibility: hidden;
 }
 
+.image-preview {
+  position: relative;
+}
+
 .image-preview > img{
     display: block;
     margin: 0 auto;
+    width: 100%;
+}
+
+.image-preview > span {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  font-size: 1.8rem;
+  cursor: pointer;
 }
 
 .attach-file{
@@ -80,5 +190,5 @@ button {
     padding: .6rem 1rem;
     display: block;
     margin: 1rem auto;
-}
+} */
 </style>
